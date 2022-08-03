@@ -6,34 +6,46 @@ import inspect
 
 
 def decorator_near(func):
+    # Декоратор-монстр. Позволяет функциям взаимодействовать с соседними координатами
     def wrapper(collection, row, column, h, w):
+        # Если выполняется функция по созданию маски, то есть возможность взаимодействовать с текущими координатами
         if inspect.signature(func) == inspect.signature(make_mask):
             func(collection, row, column)
+
         if column > 0:  # влево
             if func(collection, row, column-1):
                 wrapper.counter += 1
+
         if row > 0 and column > 0:  # влево-вверх
             if func(collection, row-1, column-1):
                 wrapper.counter += 1
+
         if row > 0:  # вверх
             if func(collection, row-1, column):
                 wrapper.counter += 1
+
         if row > 0 and column < w-1:  # вправо-вверх
             if func(collection, row-1, column+1):
                 wrapper.counter += 1
+
         if column < w-1:  # вправо
             if func(collection, row, column+1):
                 wrapper.counter += 1
+
         if row < h-1 and column < w-1:  # вправо-вниз
              if func(collection, row+1, column+1):
                 wrapper.counter += 1
+
         if row < h-1:  # вниз
             if func(collection, row+1, column):
                 wrapper.counter += 1
+
         if row < h-1 and column > 0:  # влево-вниз
             if func(collection, row+1, column-1):
                 wrapper.counter += 1
+
         if wrapper.counter:
+            # если изменился счетчик, то мы его возвращаем. Нужно для проверки живых клеток вокруг.
             for_return = wrapper.counter
             wrapper.counter = 0
             return for_return
