@@ -8,6 +8,7 @@ import inspect
 def decorator_near(func):
     # Декоратор-монстр. Позволяет функциям взаимодействовать с соседними координатами
     def wrapper(collection, row, column, h, w):
+
         # Если выполняется функция по созданию маски, то есть возможность взаимодействовать с текущими координатами
         if inspect.signature(func) == inspect.signature(make_mask):
             func(collection, row, column)
@@ -64,40 +65,58 @@ def make_mask(set_here, row, column):
     set_here.add((row, column))
 
 
-height = 5
-width = 5
-current_generation = [[0, 0, 1, 0, 0],
-                      [1, 0, 1, 0, 0],
-                      [0, 1, 1, 0, 0],
-                      [0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0]]
-next_generation = [[0 for _ in range(width)] for _ in range(height)]
+height = 6
+width = 6
+current_generation = [[0, 0, 1, 0, 0, 0],
+                      [0, 0, 0, 1, 0, 0],
+                      [0, 1, 1, 1, 0, 0],
+                      [0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0]]
+next_generation = [[0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0]]
+CLEAR = [[0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0]]
+
 
 current_mask = set()
 next_mask = set()
 
 x, y = 0, 0
 
+for _ in range(5):
+    while x < height:
+        while y < width:
+            alives = check_near(current_generation, x, y, height, width)
+            if current_generation[x][y] and alives < 2:
+                next_generation[x][y] = 0
+            elif current_generation[x][y] and alives > 3:
+                next_generation[x][y] = 0
+            elif current_generation[x][y] and 2 <= alives <= 3:
+                next_generation[x][y] = 1
+            elif not current_generation[x][y] and alives == 3:
+                next_generation[x][y] = 1
+            if current_generation[x][y]:
+                make_mask(next_mask, x, y, height, width)
+            y += 1
+        x += 1
+        y = 0
+    else:
+        x = 0
+    for i in next_generation:
+        print(i)
+    print()
+    current_generation = next_generation.copy()
+    next_generation = CLEAR.copy()
 
-while x < height:
-    while y < width:
-        alives = check_near(current_generation, x, y, height, width)
-        if current_generation[x][y] and alives < 2:
-            next_generation[x][y] = 0
-        elif current_generation[x][y] and alives > 3:
-            next_generation[x][y] = 0
-        elif current_generation[x][y] and 2 >= alives <= 3:
-            next_generation[x][y] = 1
-        elif not current_generation[x][y] and alives == 3:
-            next_generation[x][y] = 1
-        if current_generation[x][y]:
-            make_mask(next_mask, x, y, height, width)
-        y += 1
-    x += 1
-    y = 0
 
 current_mask = next_mask
 next_mask = set()
-
-for i in next_generation:
-    print(i)
