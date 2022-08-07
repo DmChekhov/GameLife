@@ -68,8 +68,8 @@ def make_mask(set_here, row, column):
 height = 6
 width = 6
 current_generation = [[0, 0, 1, 0, 0, 0],
-                      [0, 0, 0, 1, 0, 0],
-                      [0, 1, 1, 1, 0, 0],
+                      [1, 0, 1, 0, 0, 0],
+                      [0, 1, 1, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0]]
@@ -87,12 +87,12 @@ CLEAR = [[0, 0, 0, 0, 0, 0],
          [0, 0, 0, 0, 0, 0]]
 
 
-current_mask = set()
-next_mask = set()
+#current_mask = set()
+#next_mask = set()
 
 x, y = 0, 0
 
-for _ in range(5):
+for _ in range(7):
     while x < height:
         while y < width:
             alives = check_near(current_generation, x, y, height, width)
@@ -104,19 +104,19 @@ for _ in range(5):
                 next_generation[x][y] = 1
             elif not current_generation[x][y] and alives == 3:
                 next_generation[x][y] = 1
-            if current_generation[x][y]:
-                make_mask(next_mask, x, y, height, width)
+#            if current_generation[x][y]:
+#                make_mask(next_mask, x, y, height, width)
             y += 1
         x += 1
         y = 0
     else:
         x = 0
-    for i in next_generation:
+    for i in current_generation:
         print(i)
     print()
-    current_generation = next_generation.copy()
-    next_generation = CLEAR.copy()
+    current_generation = next_generation[:]
+    next_generation = CLEAR[:]
 
 
-current_mask = next_mask
-next_mask = set()
+#current_mask = next_mask
+#next_mask = set()
