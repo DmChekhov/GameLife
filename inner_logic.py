@@ -67,14 +67,14 @@ def make_mask(set_here, row, column):
     set_here.add((row, column))
 
 
-height = 6
-width = 6
-current_generation_lst = [[0, 0, 1, 0, 0, 0],
-                          [1, 0, 1, 0, 0, 0],
-                          [0, 1, 1, 0, 0, 0],
-                          [0, 0, 0, 0, 0, 0],
-                          [0, 0, 0, 0, 0, 0],
-                          [0, 0, 0, 0, 0, 0]]
+height = 10
+width = 10
+# current_generation_lst = [[0, 0, 1, 0, 0, 0],
+#                           [1, 0, 1, 0, 0, 0],
+#                           [0, 1, 1, 0, 0, 0],
+#                           [0, 0, 0, 0, 0, 0],
+#                           [0, 0, 0, 0, 0, 0],
+#                           [0, 0, 0, 0, 0, 0]]
 #next_generation = [[0, 0, 0, 0, 0, 0],
 #                   [0, 0, 0, 0, 0, 0],
 #                   [0, 0, 0, 0, 0, 0],
@@ -94,31 +94,58 @@ next_mask = set()
 current_generation_set = set()
 next_generation_set = set()
 
-x, y = 0, 0
+# x, y = 0, 0
+#
+# while x < height:
+#     while y < width:
+#         alives = check_near_lst(current_generation_lst, x, y, height, width)
+#         if current_generation_lst[x][y] and alives < 2:
+#             pass
+#         elif current_generation_lst[x][y] and alives > 3:
+#             pass
+#         elif current_generation_lst[x][y] and 2 <= alives <= 3:
+#             current_generation_set.add((x, y))
+#             make_mask(current_mask, x, y, height, width)
+#         elif not current_generation_lst[x][y] and alives == 3:
+#             current_generation_set.add((x, y))
+#             make_mask(current_mask, x, y, height, width)
+#         y += 1
+#     x += 1
+#     y = 0
+# else:
+#     x = 0
+#
+#
+# visualization = list()
+#
+# for _ in range(15):
+#     for coordinates_in_mask in current_mask:
+#         x, y = coordinates_in_mask[0], coordinates_in_mask[1]
+#         alives = check_near_set(current_generation_set, x, y, height, width)
+#         if (x, y) in current_generation_set and alives < 2:
+#             pass
+#         elif (x, y) in current_generation_set and alives > 3:
+#             pass
+#         elif (x, y) in current_generation_set and 2 <= alives <= 3:
+#             next_generation_set.add((x, y))
+#             make_mask(next_mask, x, y, height, width)
+#         elif (x, y) not in current_generation_set and alives == 3:
+#             next_generation_set.add((x, y))
+#             make_mask(next_mask, x, y, height, width)
+#     visualization = [[0 for _ in range(width)] for s in range(height)]
+#     for cell in next_generation_set:
+#         x, y = cell[0], cell[1]
+#         visualization[x][y] = 1
+#     for line in visualization:
+#         print(line)
+#     print()
+#     current_generation_set = next_generation_set
+#     next_generation_set = set()
+#     current_mask = next_mask
+#     next_mask = set()
 
-while x < height:
-    while y < width:
-        alives = check_near_lst(current_generation_lst, x, y, height, width)
-        if current_generation_lst[x][y] and alives < 2:
-            pass
-        elif current_generation_lst[x][y] and alives > 3:
-            pass
-        elif current_generation_lst[x][y] and 2 <= alives <= 3:
-            current_generation_set.add((x, y))
-            make_mask(current_mask, x, y, height, width)
-        elif not current_generation_lst[x][y] and alives == 3:
-            current_generation_set.add((x, y))
-            make_mask(current_mask, x, y, height, width)
-        y += 1
-    x += 1
-    y = 0
-else:
-    x = 0
 
-
-visualization = list()
-
-for _ in range(15):
+def step(current_generation_set, current_mask, next_generation_set, next_mask):
     for coordinates_in_mask in current_mask:
         x, y = coordinates_in_mask[0], coordinates_in_mask[1]
         alives = check_near_set(current_generation_set, x, y, height, width)
@@ -132,12 +159,6 @@ for _ in range(15):
         elif (x, y) not in current_generation_set and alives == 3:
             next_generation_set.add((x, y))
             make_mask(next_mask, x, y, height, width)
-    visualization = [[0 for _ in range(width)] for s in range(height)]
-    for cell in next_generation_set:
-        x, y = cell[0], cell[1]
-        visualization[x][y] = 1
-    for line in visualization:
-        print(line)
     print()
     current_generation_set = next_generation_set
     next_generation_set = set()
